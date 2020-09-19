@@ -97,6 +97,7 @@
   (let* ((emacs-directory (file-name-as-directory
                            (chemacs-emacs-profile-key 'user-emacs-directory)))
          (init-file       (expand-file-name "init.el" emacs-directory))
+         (early-init-file (expand-file-name "early-init.el" emacs-directory))
          (custom-file-    (chemacs-emacs-profile-key 'custom-file init-file))
          (server-name-    (chemacs-emacs-profile-key 'server-name)))
     (setq user-emacs-directory emacs-directory)
@@ -113,6 +114,10 @@
 
     (when (chemacs-emacs-profile-key 'straight-p)
       (chemacs-load-straight))
+
+    (when (and (>= emacs-major-version 27)
+               (file-exists-p early-init-file))
+      (load early-init-file))
 
     ;; Start the actual initialization
     (load init-file)
