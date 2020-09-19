@@ -98,7 +98,14 @@
                            (chemacs-emacs-profile-key 'user-emacs-directory)))
          (init-file       (expand-file-name "init.el" emacs-directory))
          (custom-file-    (chemacs-emacs-profile-key 'custom-file init-file))
-         (server-name-    (chemacs-emacs-profile-key 'server-name)))
+         (server-name-    (chemacs-emacs-profile-key 'server-name))
+         (early-init-file (expand-file-name "early-init.el" emacs-directory))
+         ;; custom-delayed-init-variables seems to be non-nil when loading
+         ;; early-init.el, but nil when loading init.el. I wish there was a
+         ;; better way to distinguish between the two files.
+         (loading-early-init (and (>= emacs-major-version 27)
+                               custom-delayed-init-variables))
+         )
     (setq user-emacs-directory emacs-directory)
 
     ;; Allow multiple profiles to each run their server
@@ -111,18 +118,21 @@
               (setenv (car env) (cdr env)))
             (chemacs-emacs-profile-key 'env))
 
-    (when (chemacs-emacs-profile-key 'straight-p)
-      (chemacs-load-straight))
+    (if loading-early-init
+        (when (file-exists-p early-init-file)
+          (load early-init-file))
+      (when (chemacs-emacs-profile-key 'straight-p)
+        (chemacs-load-straight))
 
-    ;; Start the actual initialization
-    (load init-file)
+      ;; Start the actual initialization
+      (load init-file)
 
-    ;; Prevent customize from changing ~/.emacs (this file), but if init.el has
-    ;; set a value for custom-file then don't touch it.
-    (when (not custom-file)
-      (setq custom-file custom-file-)
-      (unless (equal custom-file init-file)
-        (load custom-file)))))
+      ;; Prevent customize from changing ~/.emacs (this file), but if init.el has
+      ;; set a value for custom-file then don't touch it.
+      (when (not custom-file)
+        (setq custom-file custom-file-)
+        (unless (equal custom-file init-file)
+          (load custom-file))))))
 
 (defun chemacs-check-command-line-args (args)
   (if args
