@@ -55,6 +55,8 @@
 
 * Chemacs
 
+*This is the "classic" version of Chemacs, which goes into ~/.emacs, and which does not support early-init.el. If you are not using early-init.el then this is a solid and stable version that many people rely on. For a work-in-progress early-init.el compatible version, see [[https://github.com/plexus/chemacs2][plexus/chemacs2]].*
+
 Chemacs is an Emacs profile switcher, it makes it easy to run multiple Emacs
 configurations side by side.
 
