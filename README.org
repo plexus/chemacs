@@ -214,7 +214,8 @@ different Spacemacs configurations.
 
 With Chemacs you can point your =user-emacs-directory= to wherever you have
 Spacemacs installed, and use the =SPACEMACSDIR= environment variable to point at
-a directory with customizations that are applied on top of the base install.
+a directory containing `init.el` (or creating it on first run) with customizations 
+that are applied on top of the base install.
 
 #+BEGIN_SRC emacs-lisp
 (("spacemacs" . ((user-emacs-directory . "~/spacemacs")
