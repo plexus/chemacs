@@ -84,7 +84,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun chemacs-get-emacs-profile (profile)
-  (cdr (assoc profile chemacs-emacs-profiles)))
+  (or
+   (cdr (assoc profile chemacs-emacs-profiles))
+
+   ;; Allow full profile to be passed via arg (not just the name)
+   (when-let ((emacs-profile (read profile)))
+     (and (listp emacs-profile) emacs-profile))))
 
 (defun chemacs-emacs-profile-key (key &optional default)
   (alist-get key (chemacs-get-emacs-profile chemacs-current-emacs-profile)
